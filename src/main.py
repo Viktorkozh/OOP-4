@@ -14,5 +14,5 @@ if __name__ == "__main__":
         val = int(val)
         val2 = int(val2)
         print("Сумма: ", val + val2)
-    except ValueError as e:
+    except ValueError:
         print(f"{val}{val2}")

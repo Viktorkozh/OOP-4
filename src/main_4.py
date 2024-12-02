@@ -8,6 +8,9 @@
 # Выполнить индивидуальное задание 1 лабораторной работы 2.19,
 # добавив возможность работы с исключениями и логгирование.
 
+# Добавить вывод в файлы лога даты и времени выполнения пользовательской
+# команды с точностью до миллисекунды.
+
 from pathlib import Path
 import argparse
 import json
@@ -16,7 +19,9 @@ from datetime import datetime
 import jsonschema
 import logging
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.DEBUG, filename='app.log',
+                    encoding='utf-8',
+                    format='%(asctime)s - %(levelname)s - %(message)s')
 
 person_schema = {
     "type": "object",
@@ -139,10 +144,10 @@ def load_people(file_name):
                     person['date_of_birth'] = datetime.strptime(
                         person['date_of_birth'], '%d.%m.%Y')
                     result_people.append(person)
-                except:
+                except ValueError:
                     logging.error(
-                        f"Ошибка при разборе даты в записи, пропуск записи"
-                        "{cnt}.")
+                        "Ошибка при разборе даты в записи, пропуск записи"
+                        f"{cnt}.")
             else:
                 logging.error("Неверные данные человека, пропуск записи.")
         return result_people
@@ -174,7 +179,8 @@ def main():
 
     # Создание парсера для выбора человека по месяцу рождения.
     parser_select = subparsers.add_parser(
-        'select', parents=[file_parser], help="Выбрать людей по месяцу рождения")
+        'select', parents=[file_parser],
+        help="Выбрать людей по месяцу рождения")
     parser_select.add_argument(
         "-m", "--month", type=int, help="Месяц рождения")
 
@@ -189,7 +195,7 @@ def main():
     data_directory.mkdir(exist_ok=True)
     try:
         filename = data_directory / args.filename
-    except Exception as e:
+    except Exception:
         logging.error(
             "Отсутствуют один или нестолько обязательных аргументов.")
         exit(1)
@@ -197,7 +203,7 @@ def main():
     if os.path.exists(filename):
         try:
             people = load_people(filename)
-        except Exception as e:
+        except Exception:
             logging.error(
                 "Ошибка при загрузке данных из файла.")
             exit(1)
@@ -210,7 +216,7 @@ def main():
             people = add_person(people, args.name, args.surname,
                                 args.date_of_birth, args.zodiac_sign)
             is_dirty = True
-        except Exception as e:
+        except Exception:
             logging.error(
                 "Отсутствуют один или нестолько обязательных аргументов.")
 

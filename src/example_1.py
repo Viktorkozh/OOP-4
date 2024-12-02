@@ -9,6 +9,8 @@ import xml.etree.ElementTree as ET
 
 # Класс пользовательского исключения в случае, если неверно
 # введен номер года.
+
+
 class IllegalYearError(Exception):
     def __init__(self, year, message="Illegal year number"):
         self.year = year
@@ -20,6 +22,8 @@ class IllegalYearError(Exception):
 
 # Класс пользовательского исключения в случае, если введенная
 # команда является недопустимой.
+
+
 class UnknownCommandError(Exception):
     def __init__(self, command, message="Unknown command"):
         self.command = command
@@ -29,11 +33,13 @@ class UnknownCommandError(Exception):
     def __str__(self):
         return f"{self.command} -> {self.message}"
 
+
 @dataclass(frozen=True)
 class Worker:
     name: str
     post: str
     year: int
+
 
 @dataclass
 class Staff:
@@ -44,7 +50,7 @@ class Staff:
         today = date.today()
         if year < 0 or year > today.year:
             raise IllegalYearError(year)
-        
+
         self.workers.append(
             Worker(
                 name=name,
@@ -114,7 +120,7 @@ class Staff:
                         post = element.text
                     elif element.tag == 'year':
                         year = int(element.text)
-                
+
                 if name is not None and post is not None and year is not None:
                     self.workers.append(
                         Worker(
@@ -140,6 +146,7 @@ class Staff:
         with open(filename, 'wb') as fout:
             tree.write(fout, encoding='utf8', xml_declaration=True)
 
+
 if __name__ == '__main__':
     # Выполнить настройку логгера.
     logging.basicConfig(
@@ -153,7 +160,7 @@ if __name__ == '__main__':
         try:
             # Запросить команду из терминала.
             command = input(">>> ").lower()
-            
+
             # Выполнить действие в соответствие с командой.
             if command == 'exit':
                 break
