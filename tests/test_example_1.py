@@ -1,57 +1,61 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import pytest
-# Замените 'your_module' на имя вашего файла без .py
 from example_1 import Staff, Worker, IllegalYearError, UnknownCommandError
 
 
 def test_add_worker():
     staff = Staff()
-    staff.add("John Doe", "Developer", 2020)
+    staff.add("Иванов И.Б.", "Студент", 2020)
     assert len(staff.workers) == 1
-    assert staff.workers[0] == Worker(
-        name="John Doe", post="Developer", year=2020)
+    assert staff.workers[0] == Worker(name="Иванов И.Б.", post="Студент", year=2020)
 
 
 def test_add_worker_illegal_year():
     staff = Staff()
     with pytest.raises(IllegalYearError):
-        staff.add("Jane Doe", "Manager", 2025)  # Год больше текущего
+        staff.add("Jane Doe", "Преподаватель", 2025)
 
     with pytest.raises(IllegalYearError):
-        staff.add("Jane Doe", "Manager", -1)  # Неверный год
+        staff.add("Jane Doe", "Преподаватель", -1)
 
 
 def test_select_workers():
     staff = Staff()
-    staff.add("Alice Smith", "Designer", 2018)
-    staff.add("Bob Johnson", "Developer", 2020)
-    staff.add("Charlie Brown", "Manager", 2015)
+    staff.add("Кожуховский В.А.", "Студент", 2018)
+    staff.add("Иванов И.И.", "Студент", 2020)
+    staff.add("Иванов И.А.", "Преподаватель", 2015)
 
-    selected = staff.select(5)  # Работники со стажем более 5 лет
-    assert len(selected) == 2  # Alice и Charlie должны быть выбраны
-    assert selected[0].name == "Alice Smith"
-    assert selected[1].name == "Charlie Brown"
+    selected = staff.select(5)
+    assert len(selected) == 2
+    assert selected[0].name == "Иванов И.А."
+    assert selected[1].name == "Кожуховский В.А."
 
 
 def test_select_no_workers():
     staff = Staff()
-    staff.add("Alice Smith", "Designer", 2020)
-    selected = staff.select(5)  # Работников со стажем более 5 лет нет
+    staff.add("Кожуховский В.А.", "Студент", 2020)
+    selected = staff.select(5)
     assert len(selected) == 0
 
 
 def test_str_representation():
     staff = Staff()
-    staff.add("Alice Smith", "Designer", 2018)
-    staff.add("Bob Johnson", "Developer", 2020)
+    staff.add("Кожуховский В.А.", "Студент", 2018)
+    staff.add("Иванов И.И.", "Студент", 2020)
     expected_output = (
-        "+----+------------------------------+--------------------+--------+\n"
-        "| №  | Ф.И.О.                       | Должность          | Год    |\n"
-        "+----+------------------------------+--------------------+--------+\n"
-        "| 1  | Alice Smith                 | Designer           | 2018   |\n"
-        "| 2  | Bob Johnson                 | Developer          | 2020   |\n"
-        "+----+------------------------------+--------------------+--------+\n"
+        "+------+--------------------------------+----------------------+-----"
+        "-----+\n"
+        "|  №   |             Ф.И.О.             |      Должность       |"
+        "   Год    |\n"
+        "+------+--------------------------------+----------------------+-"
+        "---------+\n"
+        "|    1 | Иванов И.И.                    | Студент              | "
+        "    2020 |\n"
+        "|    2 | Кожуховский В.А.               | Студент              |  "
+        "   2018 |\n"
+        "+------+--------------------------------+----------------------+--"
+        "--------+"
     )
     assert str(staff) == expected_output
 

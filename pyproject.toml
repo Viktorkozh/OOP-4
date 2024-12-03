@@ -12,3 +12,36 @@ python = "^3.11"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.black]
+line-length = 88
+exclude = '''
+(
+    pycache
+)
+'''
+
+[tool.flake8]
+max-line-length = 88
+extend-exclude = 'pycache'
+
+[tool.isort]
+profile = "black"
+skip = 'pycache'
+
+[tool.mypy]
+strict = true
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+addopts = "-ra -q -p no:warnings"
+testpaths = [
+    "tests"
+]
+pythonpath = [
+    "src"
+]
