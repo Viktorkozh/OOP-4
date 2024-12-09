@@ -19,7 +19,7 @@ def test_validate_person_valid():
     person = {
         "name": "Виктор",
         "surname": "Кожуховский",
-        "date_of_birth": "1990-01-01",
+        "date_of_birth": "01.01.1990",
         "zodiac_sign": "Знак",
     }
     assert validate_person(person, person_schema) is True
@@ -45,7 +45,7 @@ def test_add_person():
     assert people[0]["date_of_birth"] == datetime.strptime("06.03.2004", "%d.%m.%Y")
 
 
-def test_list_people():
+def test_list_people(capsys: pytest.CaptureFixture[Any]):
     people = [
         {
             "name": "Виктор",
@@ -60,9 +60,10 @@ def test_list_people():
             "zodiac_sign": "Taurus",
         },
     ]
-    output = list_people(people)
-    assert "Виктор" in output
-    assert "Имя" in output
+    list_people(people)
+    captured = capsys.readouterr()
+    assert "Виктор" in captured.out.strip()
+    assert "Имя" in captured.out.strip()
 
 
 def test_select_people(capsys: pytest.CaptureFixture[Any]):
@@ -83,7 +84,7 @@ def test_select_people(capsys: pytest.CaptureFixture[Any]):
     select_people(people, 3)
     captured = capsys.readouterr()
     assert len(captured) == 2
-    assert "Виктор Кожуховский" in captured
+    assert "Виктор Кожуховский" in captured.out.strip()
 
 
 def test_save_load_people(tmp_path):

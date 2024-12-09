@@ -33,9 +33,13 @@ person_schema = {
 def validate_person(person_data, schema):
     try:
         jsonschema.validate(person_data, schema)
+        datetime.strptime(person_data["date_of_birth"], "%d.%m.%Y")
         return True
     except jsonschema.exceptions.ValidationError as e:
         logging.error(f"Данные человека не соответствуют схеме: {e}")
+        return False
+    except ValueError as e:
+        logging.error(f"Ошибка при разборе даты: {e}")
         return False
 
 
